@@ -1,0 +1,30 @@
+version: '3.9'
+services:
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - "80:80"
+    depends_on:
+      - news_api
+      - image_api
+
+  news_api:
+    build:
+      context: ./backend/newsAnalysis
+      dockerfile: Dockerfile
+    ports:
+      - "8501:8501"
+      - "8502:8502"
+    volumes:
+      - ./backend/newsAnalysis/bert_fake_news_model:/app/bert_fake_news_model
+
+  image_api:
+    build:
+      context: ./backend/imageDetection
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./backend/imageDetection/models:/app/models

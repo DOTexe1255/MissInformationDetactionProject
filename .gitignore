@@ -1,0 +1,23 @@
+node_modules/
+venv/
+__pycache__/
+.env
+dist/
+build/
+
+# ML models
+backend/newsAnalysis/bert_fake_news_model/
+*.safetensors
+*.pt
+*.pth
+*.h5
+*.ckpt
+*.pkl
+*.keras
+
+# datasets
+*.zip
+*.tar
+*.mp4
+*.csv
+*.dataset

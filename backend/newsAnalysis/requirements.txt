@@ -1,0 +1,29 @@
+# Web framework
+Flask
+Flask-Cors
+
+# Deep Learning / NLP
+torch                
+transformers        
+tokenizers
+
+# Data & Utilities
+pandas
+numpy
+scikit-learn
+tqdm
+
+# Dashboard
+streamlit           
+matplotlib
+plotly
+wordcloud
+nltk
+
+feedparser==6.0.11
+
+# (Optional) for deploying / serving
+# gunicorn>=20.1.0            # uncomment if using a production HTTP server
+
+# Note the --% after curl.exe
+# curl.exe --% -X POST http://127.0.0.1:5000/predict -H "Content-Type: application/json" -d "{\"text\": \"The government announced a new education policy...\"}"
