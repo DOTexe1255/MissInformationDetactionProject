@@ -4,10 +4,12 @@ import difflib
 import feedparser
 from urllib.parse import quote_plus
 from utils_keywords import extract_keywords
+from dotenv import load_dotenv
 
 # Load API Keys (Correct Usage)
-FACTCHECK_API_KEY = "AQ.Ab8RN6JUuBxaFejRxj2K8pqqHnfhlb9dV5a-ZdnElqRnv3gIPw"
-NEWS_API_KEY = "AQ.Ab8RN6JUuBxaFejRxj2K8pqqHnfhlb9dV5a-ZdnElqRnv3gIPw"
+load_dotenv()
+FACTCHECK_API_KEY = os.getenv("GOOGLE_API_KEY")
+NEWS_API_KEY = os.getenv("GOOGLE_API_KEY")
 
 # Google News RSS Scraper (NO API KEY)
 def search_google_news_rss(query, max_results=5):
