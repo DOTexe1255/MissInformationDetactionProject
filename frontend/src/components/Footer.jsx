@@ -10,7 +10,7 @@ export default function Footer() {
           <div>
 
             <h4 className="text-xl font-bold mb-4">
-              VeritasAI
+             VerifAI
             </h4>
 
             <p className="text-gray-400 text-sm">
@@ -55,7 +55,7 @@ export default function Footer() {
             </h5>
 
             <p className="text-gray-400 text-sm">
-              contact@veritasai.com
+              https://github.com/DOTexe1255
             </p>
 
           </div>

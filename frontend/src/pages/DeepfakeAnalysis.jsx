@@ -1,8 +1,11 @@
 import { useState } from "react";
 import React from "react";
+
 export default function DeepfakeAnalysis() {
   const [video, setVideo] = useState(null);
   const [preview, setPreview] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [result, setResult] = useState(null);
 
   const handleUpload = (e) => {
     const file = e.target.files[0];
@@ -10,46 +13,62 @@ export default function DeepfakeAnalysis() {
 
     if (file) {
       setPreview(URL.createObjectURL(file));
+      setResult(null);
     }
   };
 
-  const handleAnalyze = () => {
-    alert("Deepfake analysis will run here using your ML model.");
+  const handleAnalyze = async () => {
+    if (!video) return;
+
+    setLoading(true);
+
+    const formData = new FormData();
+    formData.append("file", video);
+
+    try {
+      const response = await fetch("http://127.0.0.1:8001/analyze", {
+        method: "POST",
+        body: formData,
+      });
+
+      if (!response.ok) throw new Error("Server error");
+
+      const data = await response.json();
+      setResult(data);
+
+    } catch (error) {
+      console.error(error);
+      alert("Backend se response nahi mila! Check FastAPI server.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
     <div className="min-h-screen bg-black text-white">
 
-      {/* HERO SECTION */}
-
-      <section className="py-16 border-b border-gray-800">
+      {/* HERO */}
+      <section className="py-10 border-b border-gray-800">
         <div className="container mx-auto px-4 text-center">
-
-          <h1 className="text-4xl font-bold mb-4">
+          <h1 className="text-3xl font-bold mb-3">
             Deepfake Video Analysis
           </h1>
 
-          <p className="text-gray-400 max-w-2xl mx-auto">
+          <p className="text-gray-400 max-w-xl mx-auto text-sm">
             Upload a video to analyze whether it has been manipulated using
-            deepfake technology. Our AI models detect facial inconsistencies,
-            temporal artifacts, and synthetic video generation.
+            deepfake technology.
           </p>
-
         </div>
       </section>
 
+      {/* MAIN */}
+      <section className="py-10">
+        <div className="container mx-auto px-4 max-w-3xl">
 
-      {/* MAIN CONTENT */}
+          <div className="bg-neutral-900 rounded-xl shadow-xl p-6 border border-gray-800">
 
-      <section className="py-16">
-        <div className="container mx-auto px-4 max-w-4xl">
-
-          <div className="bg-neutral-900 rounded-xl shadow-xl p-8 border border-gray-800">
-
-            {/* Upload Area */}
-
-            <div className="border-2 border-dashed border-gray-700 rounded-lg p-10 text-center">
-
+            {/* UPLOAD */}
+            <div className="border-2 border-dashed border-gray-700 rounded-lg p-6 text-center">
               <input
                 type="file"
                 accept="video/*"
@@ -62,81 +81,96 @@ export default function DeepfakeAnalysis() {
                 htmlFor="uploadVideo"
                 className="cursor-pointer flex flex-col items-center"
               >
-
-                <div className="w-16 h-16 bg-purple-600 rounded-full flex items-center justify-center mb-4">
-                  <i className="fas fa-video text-2xl"></i>
+                <div className="w-14 h-14 bg-purple-600 rounded-full flex items-center justify-center mb-3 text-xl">
+                  🎥
                 </div>
 
                 <p className="font-semibold">
                   Click to upload a video
                 </p>
 
-                <p className="text-sm text-gray-400 mt-1">
+                <p className="text-xs text-gray-400 mt-1">
                   MP4, MOV, AVI supported
                 </p>
-
               </label>
-
             </div>
 
-
-            {/* VIDEO PREVIEW */}
-
+            {/* PREVIEW */}
             {preview && (
-              <div className="mt-8">
+              <div className="mt-6">
 
-                <h3 className="text-lg font-semibold mb-4 text-center">
+                <h3 className="text-md font-semibold mb-3 text-center">
                   Video Preview
                 </h3>
 
-                <video
-                  src={preview}
-                  controls
-                  className="w-full rounded-lg shadow-lg"
-                />
+                {/* Fixed 16:9 */}
+                <div className="w-full aspect-video bg-black rounded-lg overflow-hidden">
+                  <video
+                    src={preview}
+                    controls
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+
+                {/* BUTTON */}
+                <div className="mt-4 text-center">
+                  <button
+                    onClick={handleAnalyze}
+                    disabled={loading}
+                    className={`w-full py-3 rounded-lg font-semibold transition ${
+                      loading
+                        ? "bg-gray-600"
+                        : "bg-purple-600 hover:bg-purple-700"
+                    }`}
+                  >
+                    {loading ? "Analyzing Video..." : "Analyze Video"}
+                  </button>
+                </div>
 
               </div>
             )}
 
+          </div>
 
-            {/* ANALYZE BUTTON */}
+          {/* RESULT */}
+          {result && (
+            <div className="mt-8 bg-neutral-900 border border-gray-800 rounded-xl p-5">
 
-            <div className="mt-8 text-center">
+              <h3 className="text-lg font-bold mb-4">
+                Analysis Result
+              </h3>
 
-              <button
-                onClick={handleAnalyze}
-                className="px-8 py-3 bg-purple-600 hover:bg-purple-700 rounded-lg font-semibold transition"
-              >
-                Analyze Video
-              </button>
+              <div className="space-y-2 text-sm text-gray-300">
 
+                <p>
+                  <span className="font-semibold">Prediction:</span>{" "}
+                  <span className={
+                    result.prediction === "Real"
+                      ? "text-green-400"
+                      : "text-red-400"
+                  }>
+                    {result.prediction}
+                  </span>
+                </p>
+
+                <p>
+                  <span className="font-semibold">Confidence:</span>{" "}
+                  {result.confidence}
+                </p>
+
+                <p>
+                  <span className="font-semibold">Frames Analyzed:</span>{" "}
+                  {result.frames_analyzed}
+                </p>
+
+                <p>
+                  <span className="font-semibold">Processing Time:</span>{" "}
+                  {result.processing_time}
+                </p>
+
+              </div>
             </div>
-
-          </div>
-
-
-          {/* RESULT PANEL */}
-
-          <div className="mt-12 bg-neutral-900 border border-gray-800 rounded-xl p-6">
-
-            <h3 className="text-xl font-bold mb-4">
-              Analysis Result
-            </h3>
-
-            <p className="text-gray-400">
-              After processing, the system will display:
-            </p>
-
-            <ul className="mt-4 space-y-2 text-gray-300">
-
-              <li>• Deepfake Probability</li>
-              <li>• Face Manipulation Detection</li>
-              <li>• Frame-level Anomalies</li>
-              <li>• Confidence Score</li>
-
-            </ul>
-
-          </div>
+          )}
 
         </div>
       </section>

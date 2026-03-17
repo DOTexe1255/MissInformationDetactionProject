@@ -107,24 +107,21 @@ export const processStepsData = [
 
 export const testimonialsData = [
   {
-    name: "Dr. Sarah Chen",
-    role: "Research Director",
+    
     content:
-      "Veritas AI has revolutionized how we approach misinformation research.",
-    image: "https://picsum.photos/100?random=101"
+      "The precision of this AI detection model is impressive. It has become an essential tool in our workflow for verifying digital evidence and spotting sophisticated deepfakes.",
+    
   },
   {
-    name: "Michael Rodriguez",
-    role: "Editor-in-Chief",
+  
     content:
-      "Integrating Veritas AI into our editorial workflow improved fact-checking efficiency.",
-    image: "https://picsum.photos/100?random=102"
+      "In an era of rampant misinformation, this tool provides the much-needed layer of authenticity. The confidence scores are highly reliable for quick fact-checking.",
+   
   },
   {
-    name: "Alexandra Petrov",
-    role: "Security Analyst",
+   
     content:
-      "The platform's ability to detect misinformation campaigns is invaluable.",
-    image: "https://picsum.photos/100?random=103"
+     "Distinguishing between high-quality AI art and real photography is getting harder, but this system handles it effortlessly. The UI is clean and the results are instant.",
+   
   }
 ];

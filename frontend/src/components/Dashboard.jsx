@@ -116,7 +116,7 @@ export default function Dashboard() {
 
                   <div className="flex justify-between mb-2">
                     <span className="font-semibold">
-                      Veritas AI Assistant
+                      VerifAI Assistant
                     </span>
                     <span className="text-xs text-neutral-500">
                       Online

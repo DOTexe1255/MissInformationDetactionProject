@@ -1,19 +1,5 @@
 import React, { useState } from "react";
 import axios from "axios";
-import {
-  Container,
-  TextField,
-  Button,
-  Typography,
-  Card,
-  CardContent,
-  CircularProgress,
-  Divider,
-  Accordion,
-  AccordionSummary,
-  AccordionDetails,
-} from "@mui/material";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 
 const FactCheck = () => {
   const [newsText, setNewsText] = useState("");
@@ -41,7 +27,6 @@ const FactCheck = () => {
       setSimpleResult(response.data);
     } catch (err) {
       setSimpleResult({ error: "Prediction backend not reachable" });
-      console.error(err);
     } finally {
       setLoadingPredict(false);
     }
@@ -61,190 +46,166 @@ const FactCheck = () => {
       setVerifyResult(response.data);
     } catch (err) {
       setVerifyResult({ error: "Verification backend not reachable" });
-      console.error(err);
     } finally {
       setLoadingVerify(false);
     }
   };
 
   return (
-    <div style={{ minHeight: '100vh', backgroundColor: '#0a101d', padding: '2.5rem' }}>
-      <Container maxWidth="md" sx={{ mt: 0 }}>
-        <Card sx={{ p: 4, boxShadow: 6, bgcolor: "#101a34", color: "white" }}>
-          <CardContent>
-            <Typography variant="h4" textAlign="center" gutterBottom sx={{ color: 'white' }}>
-              📰 Multi-Source Fake News Checker
-            </Typography>
+    <div className="min-h-screen bg-black text-white px-4 py-8">
 
-          <TextField
-            label="Enter News / Headline / Article"
-            multiline
+      {/* HEADER */}
+      <div className="max-w-4xl mx-auto mb-8 text-center">
+        <h1 className="text-3xl font-bold mb-2">
+          📰 Multi-Source Fake News Checker
+        </h1>
+        <p className="text-gray-400 text-sm">
+          Verify news using AI + multiple trusted sources
+        </p>
+      </div>
+
+      <div className="max-w-4xl mx-auto space-y-6">
+
+        {/* INPUT CARD */}
+        <div className="bg-neutral-900 border border-gray-800 rounded-xl p-6">
+          <textarea
             rows={4}
             value={newsText}
             onChange={(e) => setNewsText(e.target.value)}
-            fullWidth
-            sx={{ mb: 3, bgcolor: "#1f2f4f", borderRadius: 2 }}
-            InputProps={{ style: { color: "white" } }}
-            inputProps={{ style: { color: "white" } }}
+            placeholder="Paste news headline, article, or URL..."
+            className="w-full p-4 bg-black border border-gray-700 rounded-lg outline-none text-gray-200"
           />
 
           {error && (
-            <Typography color="error" textAlign="center" sx={{ mb: 2 }}>
-              {error}
-            </Typography>
+            <p className="text-red-400 mt-2 text-sm">{error}</p>
           )}
 
-          <Button
-            variant="contained"
-            onClick={handlePredict}
-            fullWidth
-            sx={{ mb: 2, backgroundColor: "#0077e6", '&:hover': { backgroundColor: '#0059a6' } }}
-          >
-            {loadingPredict ? "Predicting..." : "🔍 Simple Prediction (BERT)"}
-          </Button>
+          <div className="flex gap-3 mt-4">
+            <button
+              onClick={handlePredict}
+              className="flex-1 py-3 bg-blue-600 hover:bg-blue-700 rounded-lg font-semibold"
+            >
+              {loadingPredict ? "Predicting..." : "Quick Check"}
+            </button>
 
-          {loadingPredict && (
-            <CircularProgress sx={{ display: "block", mx: "auto", color: "#0077e6" }} />
-          )}
+            <button
+              onClick={handleVerify}
+              className="flex-1 text-black py-3 bg-white hover:bg-purple-700 rounded-lg font-semibold"
+            >
+              {loadingVerify ? "Verifying..." : "Full Verification"}
+            </button>
+          </div>
+        </div>
 
-          {simpleResult && (
-            <Card sx={{ mt: 3, p: 2, bgcolor: "#0f1637", border: "1px solid #2c3e50", color: 'white' }}>
-              <Typography variant="h6" gutterBottom sx={{ color: 'white' }}>
-                Simple Prediction Result
-              </Typography>
-              {simpleResult.error ? (
-                <Typography sx={{ color: '#f87171' }}>{simpleResult.error}</Typography>
-              ) : (
-                <>
-                  <Typography sx={{ color: 'white' }}>
-                    <strong>Prediction:</strong> {simpleResult.prediction}
-                  </Typography>
-                  <Typography sx={{ color: 'white' }}>
-                    <strong>Confidence:</strong> {simpleResult.confidence}
-                  </Typography>
-                  {simpleResult.combined_used && (
-                    <Typography sx={{ whiteSpace: 'pre-wrap' }}>
-                      <strong>Input used:</strong> {simpleResult.combined_used}
-                    </Typography>
-                  )}
-                </>
-              )}
-            </Card>
-          )}
+        {/* SIMPLE RESULT */}
+        {simpleResult && (
+          <div className="bg-neutral-900 border border-gray-800 rounded-xl p-6">
+            <h2 className="text-lg font-semibold mb-3">Quick Result</h2>
 
-          <Divider sx={{ my: 4, borderColor: '#2c3e50' }} />
+            {simpleResult.error ? (
+              <p className="text-red-400">{simpleResult.error}</p>
+            ) : (
+              <>
+                <p><strong>Prediction:</strong> {simpleResult.prediction}</p>
+                <p><strong>Confidence:</strong> {simpleResult.confidence}</p>
+              </>
+            )}
+          </div>
+        )}
 
-          <Button
-            variant="contained"
-            color="secondary"
-            onClick={handleVerify}
-            fullWidth
-            sx={{ mb: 2, backgroundColor: "#0485d1", '&:hover': { backgroundColor: '#036ab0' } }}
-          >
-            {loadingVerify ? "Verifying..." : "🔎 Full Verification (Fact Check + Google News + NewsAPI)"}
-          </Button>
+        {/* FULL RESULT */}
+        {verifyResult && (
+          <div className="bg-neutral-900 border border-gray-800 rounded-xl p-6 space-y-4">
 
-          {loadingVerify && (
-            <CircularProgress sx={{ display: "block", mx: "auto", color: "#43a047" }} />
-          )}
+            <div className="flex justify-between items-center">
+              <h2 className="text-xl font-bold">Final Verdict</h2>
 
-          {verifyResult && (
-            <Card sx={{ mt: 3, p: 3, bgcolor: "#0f1637", border: "1px solid #2c3e50", color: 'white' }}>
-              <Typography variant="h5" gutterBottom sx={{ color: 'white' }}>
-                Final Verdict:{" "}
-                <span
-                  style={{
-                    color:
-                      verifyResult.final_verdict === "FAKE"
-                        ? "#f87171"
-                        : verifyResult.final_verdict === "REAL"
-                        ? "#34d399"
-                        : "#f59e0b",
-                  }}
-                >
-                  {verifyResult.final_verdict || "N/A"}
-                </span>
-              </Typography>
-              <Typography>
-                Model Confidence: {verifyResult.model_confidence || "N/A"}
-              </Typography>
+              <span
+                className={`px-3 py-1 rounded-full text-sm ${
+                  verifyResult.final_verdict === "FAKE"
+                    ? "bg-red-600"
+                    : verifyResult.final_verdict === "REAL"
+                    ? "bg-green-600"
+                    : "bg-yellow-500 text-black"
+                }`}
+              >
+                {verifyResult.final_verdict || "N/A"}
+              </span>
+            </div>
 
-              {verifyResult.error && (
-                <Typography color="error" sx={{ mt: 1 }}>
-                  {verifyResult.error}
-                </Typography>
-              )}
+            <p>Confidence: {verifyResult.model_confidence || "N/A"}</p>
 
-              {verifyResult.reasons?.length > 0 && (
-                <>
-                  <Divider sx={{ my: 2, borderColor: '#2c3e50' }} />
-                  <Typography variant="h6">Why this result?</Typography>
+            {verifyResult.error && (
+              <p className="text-red-400">{verifyResult.error}</p>
+            )}
+
+            {/* REASONS */}
+            {verifyResult.reasons?.length > 0 && (
+              <div>
+                <h3 className="font-semibold mb-2">Why?</h3>
+                <ul className="list-disc list-inside text-gray-300">
                   {verifyResult.reasons.map((r, i) => (
-                    <Typography key={i}>• {r}</Typography>
+                    <li key={i}>{r}</li>
                   ))}
-                </>
+                </ul>
+              </div>
+            )}
+
+            {/* FACT CHECK */}
+            <div>
+              <h3 className="font-semibold mb-2">Fact Check Evidence</h3>
+              {(verifyResult.factcheck_evidence || []).length > 0 ? (
+                verifyResult.factcheck_evidence.map((fc, i) => (
+                  <div key={i} className="bg-black p-3 rounded mb-2">
+                    <p><strong>Claim:</strong> {fc.text}</p>
+                    <p><strong>Rating:</strong> {fc.rating}</p>
+                    <p><strong>Publisher:</strong> {fc.publisher}</p>
+                  </div>
+                ))
+              ) : (
+                <p className="text-gray-400">No evidence found</p>
               )}
+            </div>
 
-              <Divider sx={{ my: 3, borderColor: '#2c3e50' }} />
+            {/* GOOGLE NEWS */}
+            <div>
+              <h3 className="font-semibold mb-2">Google News</h3>
+              {(verifyResult.google_news || []).length > 0 ? (
+                verifyResult.google_news.map((g, i) => (
+                  <p key={i}>
+                    •{" "}
+                    <a href={g.url} target="_blank" className="text-blue-400">
+                      {g.title}
+                    </a>
+                  </p>
+                ))
+              ) : (
+                <p className="text-gray-400">No articles found</p>
+              )}
+            </div>
 
-              <Accordion sx={{ bgcolor: '#0f172a', color: 'white' }}>
-                <AccordionSummary expandIcon={<ExpandMoreIcon sx={{ color: 'white' }} />}>
-                  <Typography>📰 Google Fact Check Evidence</Typography>
-                </AccordionSummary>
-                <AccordionDetails>
-                  {(verifyResult.factcheck_evidence || []).length > 0 ? (
-                    verifyResult.factcheck_evidence.map((fc, i) => (
-                      <Card key={i} sx={{ bgcolor: '#1a1f2f', p: 2, mb: 1 }}>
-                        <Typography><strong>Claim:</strong> {fc.text}</Typography>
-                        <Typography><strong>Rating:</strong> {fc.rating}</Typography>
-                        <Typography><strong>Publisher:</strong> {fc.publisher}</Typography>
-                      </Card>
-                    ))
-                  ) : (
-                    <Typography>No fact-check evidence found.</Typography>
-                  )}
-                </AccordionDetails>
-              </Accordion>
+            {/* NEWS API */}
+            <div>
+              <h3 className="font-semibold mb-2">NewsAPI</h3>
+              {(verifyResult.newsapi_matches || []).length > 0 ? (
+                verifyResult.newsapi_matches.map((n, i) => (
+                  <p key={i}>
+                    •{" "}
+                    <a href={n.url} target="_blank" className="text-blue-400">
+                      {n.title}
+                    </a>
+                  </p>
+                ))
+              ) : (
+                <p className="text-gray-400">No articles found</p>
+              )}
+            </div>
 
-              <Accordion sx={{ bgcolor: '#0f172a', color: 'white' }}>
-                <AccordionSummary expandIcon={<ExpandMoreIcon sx={{ color: 'white' }} />}>
-                  <Typography>🗞 Google News RSS</Typography>
-                </AccordionSummary>
-                <AccordionDetails>
-                  {(verifyResult.google_news || []).length > 0 ? (
-                    verifyResult.google_news.map((g, i) => (
-                      <Typography key={i} sx={{ mb: 1 }}>
-                        • <a href={g.url} target="_blank" rel="noopener noreferrer" style={{ color: '#90caf9' }}>{g.title}</a> ({g.source})
-                      </Typography>
-                    ))
-                  ) : (
-                    <Typography>No Google News articles found.</Typography>
-                  )}
-                </AccordionDetails>
-              </Accordion>
+          </div>
+        )}
 
-              <Accordion sx={{ bgcolor: '#0f172a', color: 'white' }}>
-                <AccordionSummary expandIcon={<ExpandMoreIcon sx={{ color: 'white' }} />}>
-                  <Typography>📰 NewsAPI Articles</Typography>
-                </AccordionSummary>
-                <AccordionDetails>
-                  {(verifyResult.newsapi_matches || []).length > 0 ? (
-                    verifyResult.newsapi_matches.map((n, i) => (
-                      <Typography key={i} sx={{ mb: 1 }}>
-                        • <a href={n.url} target="_blank" rel="noopener noreferrer" style={{ color: '#90caf9' }}>{n.title}</a> ({n.source})
-                      </Typography>
-                    ))
-                  ) : (
-                    <Typography>No NewsAPI articles found.</Typography>
-                  )}
-                </AccordionDetails>
-              </Accordion>
-            </Card>
-          )}
-        </CardContent>
-      </Card>
-    </Container>
-  </div>
+      </div>
+    </div>
   );
 };
 

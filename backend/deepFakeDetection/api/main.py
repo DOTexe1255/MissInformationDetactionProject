@@ -4,9 +4,17 @@ import time
 import cv2
 from fastapi import FastAPI, UploadFile
 from src.inference import predict_frame
+from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
 
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 @app.post("/analyze")
 async def analyze_video(file: UploadFile):
@@ -33,8 +41,8 @@ async def analyze_video(file: UploadFile):
         if not ret:
             break
 
-        # every 10th frame analyze
-        if frame_count % 10 == 0:
+        # every 2nd frame analyze
+        if frame_count % 2 == 0:
             label, conf = predict_frame(frame)
             predictions.append(conf)
 

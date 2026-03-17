@@ -15,7 +15,7 @@ export default function Navbar() {
 
             <div>
               <h1 className="text-xl font-bold">
-                Veritas<span className="text-blue-500">AI</span>
+                Verif<span className="text-blue-500">AI</span>
               </h1>
               <p className="text-xs text-gray-300">
                 Truth Verification Platform

@@ -1,5 +1,4 @@
-import { useState } from "react";
-import React from "react";
+import React, { useState } from "react";
 
 export default function AiImageDetection() {
   const [image, setImage] = useState(null);
@@ -12,7 +11,7 @@ export default function AiImageDetection() {
     if (file) {
       setImage(file);
       setPreview(URL.createObjectURL(file));
-      setResult(null); // Reset result for new upload
+      setResult(null);
     }
   };
 
@@ -20,85 +19,90 @@ export default function AiImageDetection() {
     if (!image) return;
 
     setLoading(true);
+    setResult(null);
+
     const formData = new FormData();
-    formData.append("file", image); 
+    formData.append("file", image); // 'file' matches backend parameter
 
     try {
-      // Direct call to your FastAPI at port 8000
+      // Direct call to FastAPI
       const response = await fetch("http://127.0.0.1:8000/detect-image", {
         method: "POST",
         body: formData,
       });
 
-      if (!response.ok) throw new Error("Server response not ok");
+      if (!response.ok) {
+        throw new Error("Server error or CORS blocked");
+      }
 
       const data = await response.json();
-      setResult(data); 
+      setResult(data);
     } catch (error) {
-      console.error("Fetch Error:", error);
-      alert("Backend se response nahi mila! Check if FastAPI is running on port 8000.");
+      console.error("Error:", error);
+      alert("Error: Backend se connect nahi ho paya. Make sure CORS is enabled in FastAPI.");
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 py-10">
-      <div className="max-w-xl mx-auto bg-white rounded-2xl shadow-xl overflow-hidden">
+    <div style={styles.container}>
+      <div style={styles.card}>
+        <h1 style={styles.title}>AI Image Detector</h1>
         
-        {/* HEADER */}
-        <div className="bg-blue-600 p-6 text-white text-center">
-          <h1 className="text-2xl font-bold">AI Detection Interface</h1>
+        {/* Upload Box */}
+        <div style={styles.uploadBox}>
+          <input 
+            type="file" 
+            accept="image/*" 
+            onChange={handleUpload} 
+            id="fileInput" 
+            style={{ display: 'none' }} 
+          />
+          <label htmlFor="fileInput" style={styles.uploadLabel}>
+            {preview ? "Change Selected Image" : "Click to Upload Image"}
+          </label>
         </div>
 
-        <div className="p-8">
-          {/* UPLOAD BOX */}
-          <div className="border-2 border-dashed border-gray-300 rounded-xl p-8 text-center bg-gray-50">
-            <input type="file" accept="image/*" onChange={handleUpload} className="hidden" id="file-input" />
-            <label htmlFor="file-input" className="cursor-pointer block">
-              <p className="text-gray-600 font-medium">Click to select image</p>
-            </label>
+        {/* Preview Area */}
+        {preview && (
+          <div style={styles.previewContainer}>
+            <img src={preview} alt="Preview" style={styles.image} />
+            <button 
+              onClick={handleAnalyze} 
+              disabled={loading} 
+              style={loading ? styles.buttonDisabled : styles.button}
+            >
+              {loading ? "Analyzing..." : "Analyze Image"}
+            </button>
           </div>
+        )}
 
-          {/* PREVIEW */}
-          {preview && (
-            <div className="mt-6">
-              <img src={preview} alt="preview" className="max-h-64 mx-auto rounded-lg shadow-sm" />
-              <button
-                onClick={handleAnalyze}
-                disabled={loading}
-                className={`w-full mt-6 py-3 rounded-lg font-bold text-white transition ${
-                  loading ? "bg-gray-400" : "bg-blue-600 hover:bg-blue-700"
-                }`}
-              >
-                {loading ? "Processing Request..." : "Start AI Analysis"}
-              </button>
-            </div>
-          )}
-
-          {/* RESPONSE DISPLAY */}
-          {result && (
-            <div className={`mt-8 p-6 rounded-xl border-l-8 ${
-              result.prediction === "Real" ? "bg-green-50 border-green-500" : "bg-red-50 border-red-500"
-            }`}>
-              <div className="flex justify-between items-center">
-                <div>
-                  <p className="text-sm text-gray-500 uppercase font-bold">Detection Status</p>
-                  <h2 className={`text-2xl font-black ${
-                    result.prediction === "Real" ? "text-green-700" : "text-red-700"
-                  }`}>
-                    {result.prediction.toUpperCase()}
-                  </h2>
-                </div>
-                <div className="text-right">
-                  <p className="text-sm text-gray-500 uppercase font-bold">Confidence</p>
-                  <p className="text-2xl font-mono font-bold text-gray-800">{result.confidence}</p>
-                </div>
-              </div>
-            </div>
-          )}
-        </div>
+        {/* Result Area */}
+        {result && (
+          <div style={{
+            ...styles.resultCard, 
+            borderColor: result.prediction === "Real" ? "#22c55e" : "#ef4444"
+          }}>
+            <h3>Prediction: <strong>{result.prediction}</strong></h3>
+            <p>Confidence: <strong>{result.confidence}</strong></p>
+          </div>
+        )}
       </div>
     </div>
   );
 }
+
+// Inline Styles taaki CSS ki tension na rahe
+const styles = {
+  container: { minHeight: "100vh", backgroundColor: "#f3f4f6", padding: "40px 20px", fontFamily: "Arial" },
+  card: { maxWidth: "600px", margin: "0 auto", backgroundColor: "#fff", padding: "30px", borderRadius: "12px", boxShadow: "0 4px 10px rgba(0,0,0,0.1)" },
+  title: { textAlign: "center", marginBottom: "20px", color: "#1f2937" },
+  uploadBox: { border: "2px dashed #d1d5db", padding: "20px", textAlign: "center", borderRadius: "8px", backgroundColor: "#f9fafb" },
+  uploadLabel: { cursor: "pointer", color: "#2563eb", fontWeight: "bold" },
+  previewContainer: { marginTop: "20px", textAlign: "center" },
+  image: { maxWidth: "100%", maxHeight: "300px", borderRadius: "8px", marginBottom: "15px" },
+  button: { width: "100%", padding: "12px", backgroundColor: "#2563eb", color: "#fff", border: "none", borderRadius: "6px", cursor: "pointer", fontWeight: "bold" },
+  buttonDisabled: { width: "100%", padding: "12px", backgroundColor: "#9ca3af", color: "#fff", border: "none", borderRadius: "6px", cursor: "not-allowed" },
+  resultCard: { marginTop: "20px", padding: "15px", borderRadius: "8px", borderLeft: "6px solid", backgroundColor: "#f8fafc" }
+};
