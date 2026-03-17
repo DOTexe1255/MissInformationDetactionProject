@@ -45,16 +45,16 @@ export default function DeepfakeAnalysis() {
   };
 
   return (
-    <div className="min-h-screen bg-black text-white">
+    <div className="min-h-screen bg-gray-50 text-black">
 
       {/* HERO */}
-      <section className="py-10 border-b border-gray-800">
+      <section className="py-10 border-b border-gray-200">
         <div className="container mx-auto px-4 text-center">
           <h1 className="text-3xl font-bold mb-3">
             Deepfake Video Analysis
           </h1>
 
-          <p className="text-gray-400 max-w-xl mx-auto text-sm">
+          <p className="text-gray-600 max-w-xl mx-auto text-sm">
             Upload a video to analyze whether it has been manipulated using
             deepfake technology.
           </p>
@@ -65,10 +65,10 @@ export default function DeepfakeAnalysis() {
       <section className="py-10">
         <div className="container mx-auto px-4 max-w-3xl">
 
-          <div className="bg-neutral-900 rounded-xl shadow-xl p-6 border border-gray-800">
+          <div className="bg-white rounded-xl shadow-xl p-6 border border-gray-200">
 
             {/* UPLOAD */}
-            <div className="border-2 border-dashed border-gray-700 rounded-lg p-6 text-center">
+            <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center">
               <input
                 type="file"
                 accept="video/*"
@@ -81,15 +81,15 @@ export default function DeepfakeAnalysis() {
                 htmlFor="uploadVideo"
                 className="cursor-pointer flex flex-col items-center"
               >
-                <div className="w-14 h-14 bg-purple-600 rounded-full flex items-center justify-center mb-3 text-xl">
-                  🎥
-                </div>
+                <div className="w-14 h-14 bg-blue-600 text-white rounded-full flex items-center justify-center mb-3 text-xl">
+  🎥
+</div>
 
                 <p className="font-semibold">
                   Click to upload a video
                 </p>
 
-                <p className="text-xs text-gray-400 mt-1">
+                <p className="text-xs text-gray-500 mt-1">
                   MP4, MOV, AVI supported
                 </p>
               </label>
@@ -104,7 +104,7 @@ export default function DeepfakeAnalysis() {
                 </h3>
 
                 {/* Fixed 16:9 */}
-                <div className="w-full aspect-video bg-black rounded-lg overflow-hidden">
+                <div className="w-full aspect-video bg-gray-200 rounded-lg overflow-hidden">
                   <video
                     src={preview}
                     controls
@@ -119,8 +119,8 @@ export default function DeepfakeAnalysis() {
                     disabled={loading}
                     className={`w-full py-3 rounded-lg font-semibold transition ${
                       loading
-                        ? "bg-gray-600"
-                        : "bg-purple-600 hover:bg-purple-700"
+                        ? "bg-gray-400 text-white"
+                        : "bg-blue-600 hover:bg-blue-700 text-white"
                     }`}
                   >
                     {loading ? "Analyzing Video..." : "Analyze Video"}
@@ -134,20 +134,20 @@ export default function DeepfakeAnalysis() {
 
           {/* RESULT */}
           {result && (
-            <div className="mt-8 bg-neutral-900 border border-gray-800 rounded-xl p-5">
+            <div className="mt-8 bg-white border border-gray-200 rounded-xl p-5">
 
               <h3 className="text-lg font-bold mb-4">
                 Analysis Result
               </h3>
 
-              <div className="space-y-2 text-sm text-gray-300">
+              <div className="space-y-2 text-sm text-gray-700">
 
                 <p>
                   <span className="font-semibold">Prediction:</span>{" "}
                   <span className={
                     result.prediction === "Real"
-                      ? "text-green-400"
-                      : "text-red-400"
+                      ? "text-green-600"
+                      : "text-red-600"
                   }>
                     {result.prediction}
                   </span>

@@ -1,6 +1,23 @@
 import { analysisStatsData, recentDetectionsData } from "../data/data";
+import { useLocation } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+
+
 import React from "react";
 export default function Dashboard() {
+  const navigate = useNavigate();
+  const[input, setInput] = React.useState("");
+
+  const handleSend = () => {
+    if (!input.trim()) return;
+
+    navigate("/AiBot", {
+      state: { message: input }
+    });
+  };
+
+
+
   return (
     <section className="py-16 bg-neutral-100">
       <div className="container mx-auto px-4">
@@ -26,11 +43,10 @@ export default function Dashboard() {
                       <span className="text-neutral-500">{item.label}</span>
 
                       <span
-                        className={`text-sm ${
-                          item.trend === "up"
-                            ? "text-green-600"
-                            : "text-yellow-600"
-                        }`}
+                        className={`text-sm ${item.trend === "up"
+                          ? "text-green-600"
+                          : "text-yellow-600"
+                          }`}
                       >
                         {item.change}
                       </span>
@@ -138,13 +154,16 @@ export default function Dashboard() {
 
               <input
                 type="text"
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
                 placeholder="Ask about any news article..."
                 className="flex-1 px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500"
               />
 
-              <button className="px-6 py-3 bg-blue-600 text-white rounded-lg">
+              <button onClick={handleSend} className="px-6 py-3 bg-blue-600 text-white rounded-lg">
                 <i className="fas fa-paper-plane"></i>
               </button>
+             
 
             </div>
 

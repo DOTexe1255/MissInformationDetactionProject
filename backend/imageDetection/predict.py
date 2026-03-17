@@ -22,21 +22,24 @@ def preprocess(image_path):
     img = np.expand_dims(img, axis=0)
 
     return img
-
-
 def predict(image_path):
 
     img = preprocess(image_path)
 
-    preds = model.predict(img)
+    pred = model.predict(img)[0][0]
 
-    # probability
-    probs = preds[0]
+    print("Raw output:", pred)
 
-    pred_index = np.argmax(probs)
+    if pred > 0.5:
+        prediction = "Real"
+        confidence = pred
+    else:
+        prediction = "Fake"
+        confidence = 1 - pred
 
-    confidence = probs[pred_index] * 100
+    # smoothing (important)
+    confidence = 0.5 + (confidence - 0.5) * 0.5
 
-    prediction = classes[pred_index]
+    confidence = round(float(confidence * 100), 2)
 
-    return prediction, round(float(confidence),2)
+    return prediction, confidence

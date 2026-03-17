@@ -1,7 +1,7 @@
 import { testimonialsData } from "../data/data";
 import React from "react";
 
-export default function Testimonials() {
+export default function technologyData() {
   return (
     <section className="py-16 bg-neutral-50">
 
@@ -10,7 +10,7 @@ export default function Testimonials() {
         <div className="text-center mb-12">
 
           <h3 className="text-3xl font-bold mb-4">
-            Trusted by Professionals
+         The Technology Behind the Detection
           </h3>
 
         </div>
@@ -23,10 +23,7 @@ export default function Testimonials() {
 
               <div className="flex items-center mb-4">
 
-                <img
-                  src={item.image}
-                  className="w-12 h-12 rounded-full mr-4"
-                />
+               
 
                 <div>
                   <h5 className="font-semibold">

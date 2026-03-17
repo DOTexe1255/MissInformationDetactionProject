@@ -9,7 +9,6 @@ import DeepfakeAnalysis from "./pages/DeepfakeAnalysis";
 import ApiDocs from "./pages/ApiDocs";
 import Alerts from "./pages/Alerts";
 import SourceVerification from "./pages/SourceVerification";
-import AiNewsAnalyst from "./pages/AiNewsAnalyst";
 
 function App() {
   return (
@@ -24,7 +23,6 @@ function App() {
       <Route path="/api-docs" element={<ApiDocs />} />
       <Route path="/source-verification" element={<SourceVerification />} />
       <Route path="/alerts" element={<Alerts />} />
-      <Route path="/ai-news-analyst" element={<AiNewsAnalyst />} />
     </Routes>
       
     </>

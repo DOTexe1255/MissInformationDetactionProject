@@ -107,21 +107,21 @@ export const processStepsData = [
 
 export const testimonialsData = [
   {
-    
+    name: "Natural Language Processing (NLP)",
+    role: "Chatbot Engine",
     content:
-      "The precision of this AI detection model is impressive. It has become an essential tool in our workflow for verifying digital evidence and spotting sophisticated deepfakes.",
-    
+      "This module processes user queries and generates intelligent, human-like responses using advanced NLP techniques."
   },
   {
-  
+    name: "Convolutional Neural Network (CNN)",
+    role: "Image Detection",
     content:
-      "In an era of rampant misinformation, this tool provides the much-needed layer of authenticity. The confidence scores are highly reliable for quick fact-checking.",
-   
+      "CNN models analyze images to identify objects and detect manipulated or synthetic visual content with high accuracy."
   },
   {
-   
+    name: "Deepfake Detection Model",
+    role: "Media Verification",
     content:
-     "Distinguishing between high-quality AI art and real photography is getting harder, but this system handles it effortlessly. The UI is clean and the results are instant.",
-   
+      "This system detects fake videos and images by analyzing facial inconsistencies, pixel-level artifacts, and abnormal patterns."
   }
 ];

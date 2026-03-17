@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 export default function Hero() {
   return (
     <section className="bg-[#1a365d] text-white py-20">
@@ -18,9 +19,9 @@ export default function Hero() {
 
         <div className="flex justify-center gap-4">
 
-          <button className="px-8 py-3 bg-blue-600 rounded-lg">
+          <Link to="/FactCheck" className="px-8 py-3 bg-blue-600 rounded-lg">
             Start Analysis
-          </button>
+          </Link>
 
           <button className="px-8 py-3 bg-white/10 rounded-lg">
             View Documentation
